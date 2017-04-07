@@ -109,15 +109,25 @@ SwaggerUi.partials.signature = (function () {
     return formatted;
   };
 
+  var isListType = function(model) {
+    var listType;
+    listType = null;
+    if (model && model.indexOf('[') >= 0) {
+      listType = model.substring(model.indexOf('[') + 1, model.indexOf(']'));
+    } else {
+      listType = void 0;
+    }
+    return listType;
+  };
+
   // copy-pasted from swagger-js
   var getModelSignature = function (name, schema, models, modelPropertyMacro) {
+    var listType;
     var strongOpen = '<span class="strong">';
     var strongClose = '</span>';
-
     var optionHtml = function (label, value) {
       return '<tr><td class="optionName">' + label + ':</td><td>' + value + '</td></tr>';
     };
-
 
     // Allow for ignoring the 'name' argument.... shifting the rest
     if(_.isObject(arguments[0])) {
@@ -140,7 +150,14 @@ SwaggerUi.partials.signature = (function () {
     // Dereference $ref from 'models'
     if(typeof schema.$ref === 'string') {
       name = simpleRef(schema.$ref);
-      schema = models[name];
+      listType = isListType(name);
+      if (listType) {
+        schema = models[listType];
+        name = listType;
+      }
+      else {
+        schema = models[name];
+      }
       if(typeof schema === 'undefined')
       {
         return strongOpen + name + ' is not defined!' + strongClose;
@@ -167,7 +184,7 @@ SwaggerUi.partials.signature = (function () {
     var inlineModels = 0;
 
     // Generate current HTML
-    var html = processModel(schema, name);
+    var html = processModel(schema, name, listType);
 
     // Generate references HTML
     while (_.keys(references).length > 0) {
@@ -180,7 +197,7 @@ SwaggerUi.partials.signature = (function () {
         if (!seenModel) {
           seenModels.push(name);
 
-          html += '<br />' + processModel(schema, name);
+          html += '<br />' + processModel(schema, name, listType);
         }
       });
       /* jshint ignore:end */
@@ -353,10 +370,10 @@ SwaggerUi.partials.signature = (function () {
       return html;
     }
 
-    function processModel(schema, name) {
+    function processModel(schema, name, listType) {
       var type = schema.type || 'object';
       var isArray = schema.type === 'array';
-      var html = strongOpen + name + ' ' + (isArray ? '[' : '{') + strongClose;
+      var html = strongOpen + (listType ? 'Array of ' : '') + name + ' ' + (isArray ? '[' : '{') + strongClose;
       var contents;
 
       if (name) {
@@ -706,7 +723,7 @@ SwaggerUi.partials.signature = (function () {
     return result;
   };
   */
-  
+
   var getPrefix = function (name, xml) {
     var result = name || '';
 
@@ -844,7 +861,7 @@ SwaggerUi.partials.signature = (function () {
 
     if (namespace) {
       attrs.push(namespace);
-    }   
+    }
 
     if (!properties && !additionalProperties) { return getErrorMessage(); }
 
@@ -889,10 +906,10 @@ SwaggerUi.partials.signature = (function () {
     var output, index;
     config = config || {};
     config.modelsToIgnore = config.modelsToIgnore || [];
-   
+
     var descriptor = _.isString($ref) ? getDescriptorByRef($ref, name, models, config)
         : getDescriptor(name, definition, models, config);
-    
+
     if (!descriptor) {
       return getErrorMessage();
     }
@@ -943,7 +960,7 @@ SwaggerUi.partials.signature = (function () {
     else {
         name = name || model.name;
     }
-    
+
     if (config.modelsToIgnore.indexOf($ref) > -1) {
       type = 'loop';
       config.loopTo = modelType;
@@ -954,7 +971,7 @@ SwaggerUi.partials.signature = (function () {
     if (!model.definition) {
       return null;
     }
-    return new Descriptor(name, type, model.definition, models, config);    
+    return new Descriptor(name, type, model.definition, models, config);
   }
 
   function getDescriptor (name, definition, models, config){

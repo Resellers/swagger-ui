@@ -93,6 +93,7 @@ window.SwaggerUi = Backbone.Router.extend({
   // Event handler for when url/key is received from user
   updateSwaggerUi: function(data){
     this.options.url = data.url;
+    this.options.basePath = data.basePath;
     this.load();
   },
 
@@ -106,6 +107,7 @@ window.SwaggerUi = Backbone.Router.extend({
     if (this.authView) {
       this.authView.remove();
     }
+
     var url = this.options.url;
     if (url && url.indexOf('http') !== 0) {
       url = this.buildUrl(window.location.href.toString(), url);

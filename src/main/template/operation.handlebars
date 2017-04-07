@@ -31,16 +31,6 @@
         {{#if security}}
             <div class='authorize-wrapper authorize-wrapper_operation'></div>
         {{/if}}
-        {{#if type}}
-          <div class="response-class">
-            <h4><span data-sw-translate>Response Class</span> (<span data-sw-translate>Status</span> {{{escape successCode}}})</h4>
-              {{#if successDescription}}<div class="markdown">{{{sanitize successDescription}}}</div>{{/if}}
-            <p><span class="model-signature" /></p>
-            <br/>
-            <div class="response-content-type" />
-            </div>
-        {{/if}}
-
         {{#if headers}}
           <h4 data-sw-translate>Headers</h4>
           <table class="headers">
@@ -84,23 +74,7 @@
           </tbody>
           </table>
           {{/if}}
-          {{#if responseMessages}}
-          <div style='margin:0;padding:0;display:inline'></div>
-          <h4 data-sw-translate>Response Messages</h4>
-          <table class='fullwidth response-messages'>
-            <thead>
-            <tr>
-              <th data-sw-translate>HTTP Status Code</th>
-              <th data-sw-translate>Reason</th>
-              <th data-sw-translate>Response Model</th>
-              <th data-sw-translate>Headers</th>
-            </tr>
-            </thead>
-            <tbody class="operation-status">
-            </tbody>
-          </table>
-          {{/if}}
-          {{#if isReadOnly}}
+                    {{#if isReadOnly}}
           {{else}}
           <div class='sandbox_header'>
             <input class='submit' type='submit' value='Try it out!' data-sw-translate/>
@@ -125,6 +99,31 @@
           <h4 data-sw-translate>Response Headers</h4>
           <div class='block response_headers'></div>
         </div>
+        <br/>
+        {{#if type}}
+          <div class="response-class">
+            <h4><span data-sw-translate>Response Class</span> (<span data-sw-translate>Status</span> {{{escape successCode}}})</h4>
+              {{#if successDescription}}<div class="markdown">{{{sanitize successDescription}}}</div>{{/if}}
+            <p><span class="model-signature" /></p>
+            <div class="response-content-type" />
+            </div>
+        {{/if}}
+        {{#if responseMessages}}
+          <div style='margin:0;padding:0;display:inline'></div>
+          <h4 data-sw-translate>Response Messages</h4>
+          <table class='fullwidth response-messages'>
+            <thead>
+            <tr>
+              <th data-sw-translate>HTTP Status Code</th>
+              <th data-sw-translate>Reason</th>
+              <th data-sw-translate>Response Model</th>
+              <th data-sw-translate>Headers</th>
+            </tr>
+            </thead>
+            <tbody class="operation-status">
+            </tbody>
+          </table>
+          {{/if}}
       </div>
     </li>
   </ul>

@@ -172,7 +172,6 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
     produces = this.model.produces;
     isXML = this.contains(produces, 'xml');
     isJSON = isXML ? this.contains(produces, 'json') : true;
-
     if (this.model.successResponse) {
       successResponse = this.model.successResponse;
       for (key in successResponse) {
@@ -182,6 +181,7 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
           this.model.successDescription = value.description;
           this.model.headers = this.parseResponseHeaders(value.headers);
           signatureModel = {
+            modelLabel: value.name,
             sampleJSON: isJSON ? JSON.stringify(SwaggerUi.partials.signature.createJSONSample(value), void 0, 2) : false,
             isParam: false,
             sampleXML: isXML ? SwaggerUi.partials.signature.createXMLSample(value.name, value.definition, value.models) : false,
@@ -195,6 +195,7 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
       }
     } else if (this.model.responseClassSignature && this.model.responseClassSignature !== 'string') {
       signatureModel = {
+        modelLabel: this.model.responseModel,
         sampleJSON: this.model.responseSampleJSON,
         isParam: false,
         signature: this.model.responseClassSignature

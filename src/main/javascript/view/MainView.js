@@ -11,7 +11,6 @@ SwaggerUi.Views.MainView = Backbone.View.extend({
   initialize: function(opts){
     var sorterOption, sorterFn, key, value;
     opts = opts || {};
-
     this.router = opts.router;
 
     // Sort APIs
@@ -116,7 +115,6 @@ SwaggerUi.Views.MainView = Backbone.View.extend({
     // Make all definitions available at the root of the resource so that they can
     // be loaded by the JSonEditor
     resource.definitions = this.model.definitions;
-
     var resourceView = new SwaggerUi.Views.ResourceView({
       model: resource,
       router: this.router,

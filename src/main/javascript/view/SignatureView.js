@@ -15,11 +15,10 @@ SwaggerUi.Views.SignatureView = Backbone.View.extend({
 
     $(this.el).html(Handlebars.templates.signature(this.model));
 
-    if (this.model.defaultRendering === 'model') {
-      this.switchToDescription();
-    } else {
-      this.switchToSnippet();
-    }
+    this.switchToSnippet();
+    $('.snippet-link', $(this.el)).removeClass('selected');
+    $('.snippet', $(this.el)).hide();
+
 
     return this;
   },
@@ -29,7 +28,7 @@ SwaggerUi.Views.SignatureView = Backbone.View.extend({
     if (e) { e.preventDefault(); }
 
     $('.snippet', $(this.el)).hide();
-    $('.description', $(this.el)).show();
+    $('.description', $(this.el)).toggle();
     $('.description-link', $(this.el)).addClass('selected');
     $('.snippet-link', $(this.el)).removeClass('selected');
   },
@@ -38,7 +37,7 @@ SwaggerUi.Views.SignatureView = Backbone.View.extend({
   switchToSnippet: function(e){
     if (e) { e.preventDefault(); }
 
-    $('.snippet', $(this.el)).show();
+    $('.snippet', $(this.el)).toggle();
     $('.description', $(this.el)).hide();
     $('.snippet-link', $(this.el)).addClass('selected');
     $('.description-link', $(this.el)).removeClass('selected');
