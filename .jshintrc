@@ -28,7 +28,6 @@
     "jQuery": false,
     "marked": false,
     "SwaggerClient": false,
-    "hljs": false,
     "SwaggerUi": false,
     "jsyaml": false,
     "define": false,

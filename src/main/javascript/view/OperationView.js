@@ -89,60 +89,12 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
   // Note: copied from CoffeeScript compiled file
   // TODO: refactor
   render: function() {
-    var a, auth, auths, code, contentTypeModel, isMethodSubmissionSupported, k, key, l, len, len1, len2, len3, len4, m, modelAuths, n, o, p, param, q, ref, ref1, ref2, ref3, ref4, ref5, responseContentTypeView, responseSignatureView, schema, schemaObj, scopeIndex, signatureModel, statusCode, successResponse, type, v, value, produces, isXML, isJSON;
+    var code, contentTypeModel, isMethodSubmissionSupported, key, len2, len3, len4, n, p, param, q, ref, ref2, ref3, ref4, ref5, responseContentTypeView, responseSignatureView, schema, schemaObj, signatureModel, statusCode, successResponse, type, value, produces, isXML, isJSON;
     isMethodSubmissionSupported = jQuery.inArray(this.model.method, this.model.supportedSubmitMethods()) >= 0;
     if (!isMethodSubmissionSupported) {
       this.model.isReadOnly = true;
     }
     this.model.description = this.model.description || this.model.notes;
-    this.model.oauth = null;
-    modelAuths = this.model.authorizations || this.model.security;
-    if (modelAuths) {
-      if (Array.isArray(modelAuths)) {
-        for (l = 0, len = modelAuths.length; l < len; l++) {
-          auths = modelAuths[l];
-          for (key in auths) {
-            for (a in this.auths) {
-              auth = this.auths[a];
-              if (key === auth.name) {
-                if (auth.type === 'oauth2') {
-                  this.model.oauth = {};
-                  this.model.oauth.scopes = [];
-                  ref1 = auth.value.scopes;
-                  for (k in ref1) {
-                    v = ref1[k];
-                    scopeIndex = auths[key].indexOf(k);
-                    if (scopeIndex >= 0) {
-                      o = {
-                        scope: k,
-                        description: v
-                      };
-                      this.model.oauth.scopes.push(o);
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      } else {
-        for (k in modelAuths) {
-          v = modelAuths[k];
-          if (k === 'oauth2') {
-            if (this.model.oauth === null) {
-              this.model.oauth = {};
-            }
-            if (this.model.oauth.scopes === void 0) {
-              this.model.oauth.scopes = [];
-            }
-            for (m = 0, len1 = v.length; m < len1; m++) {
-              o = v[m];
-              this.model.oauth.scopes.push(o);
-            }
-          }
-        }
-      }
-    }
     if (typeof this.model.responses !== 'undefined') {
       this.model.responseMessages = [];
       ref2 = this.model.responses;
@@ -260,21 +212,6 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
         statusCode.headers = this.parseHeadersType(statusCode.headers);
       }
       this.addStatusCode(statusCode);
-    }
-
-    if (Array.isArray(this.model.security)) {
-      var authsModel = SwaggerUi.utils.parseSecurityDefinitions(this.model.security, this.model.parent.securityDefinitions);
-
-      authsModel.isLogout = !_.isEmpty(this.model.clientAuthorizations.authz);
-      this.authView = new SwaggerUi.Views.AuthButtonView({
-        data: authsModel,
-        router: this.router,
-        isOperation: true,
-        model: {
-          scopes: authsModel.scopes
-        }
-      });
-      this.$('.authorize-wrapper').append(this.authView.render().el);
     }
 
     this.showSnippet();
@@ -815,8 +752,6 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
     // only highlight the response if response is less than threshold, default state is highlight response
     if (opts.highlightSizeThreshold && typeof response.data !== 'undefined' && response.data.length > opts.highlightSizeThreshold || skipHighlight) {
       return response_body_el;
-    } else {
-      return hljs.highlightBlock(response_body_el);
     }
   },
 

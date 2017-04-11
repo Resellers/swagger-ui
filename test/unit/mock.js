@@ -32,10 +32,6 @@ $(function () {
         window.SwaggerTranslator.translate();
       }
 
-      $('pre code').each(function(i, e) {
-        hljs.highlightBlock(e);
-      });
-
     },
     onFailure: function() {
       log('Unable to Load SwaggerUI');

@@ -61,14 +61,6 @@ window.SwaggerUi = Backbone.Router.extend({
     this.options.progress = function(d) { return that.showMessage(d); };
     this.options.failure = function(d) { return that.onLoadFailure(d); };
 
-    // Create view to handle the header inputs
-    this.headerView = new SwaggerUi.Views.HeaderView({el: $('#header')});
-
-    // Event handler for when the baseUrl/apiKey is entered by user
-    this.headerView.on('update-swagger-ui', function(data) {
-      return that.updateSwaggerUi(data);
-    });
-
     // JSon Editor custom theming
      JSONEditor.defaults.iconlibs.swagger = JSONEditor.AbstractIconLib.extend({
       mapping: {
@@ -104,10 +96,6 @@ window.SwaggerUi = Backbone.Router.extend({
       this.mainView.clear();
     }
 
-    if (this.authView) {
-      this.authView.remove();
-    }
-
     var url = this.options.url;
     if (url && url.indexOf('http') !== 0) {
       url = this.buildUrl(window.location.href.toString(), url);
@@ -116,7 +104,6 @@ window.SwaggerUi = Backbone.Router.extend({
       this.options.authorizations = this.api.clientAuthorizations.authz;
     }
     this.options.url = url;
-    this.headerView.update(url);
 
     this.api = new SwaggerClient(this.options);
   },

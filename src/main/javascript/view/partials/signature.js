@@ -11,6 +11,17 @@ SwaggerUi.partials.signature = (function () {
     return schema;
   };
 
+  var isListType = function(model) {
+    var listType;
+    listType = null;
+    if (model && model.indexOf('[') >= 0) {
+      listType = model.substring(model.indexOf('[') + 1, model.indexOf(']'));
+    } else {
+      listType = void 0;
+    }
+    return listType;
+  };
+
   // copy-pasted from swagger-js
   var simpleRef = function (name) {
     if (typeof name === 'undefined') {
@@ -18,10 +29,9 @@ SwaggerUi.partials.signature = (function () {
     }
 
     if (name.indexOf('#/definitions/') === 0) {
-      return name.substring('#/definitions/'.length);
-    } else {
-      return name;
+      name = name.substring('#/definitions/'.length);
     }
+    return name;
   };
 
   // copy-pasted from swagger-js
@@ -107,17 +117,6 @@ SwaggerUi.partials.signature = (function () {
       fn(ln);
     }
     return formatted;
-  };
-
-  var isListType = function(model) {
-    var listType;
-    listType = null;
-    if (model && model.indexOf('[') >= 0) {
-      listType = model.substring(model.indexOf('[') + 1, model.indexOf(']'));
-    } else {
-      listType = void 0;
-    }
-    return listType;
   };
 
   // copy-pasted from swagger-js
@@ -490,7 +489,7 @@ SwaggerUi.partials.signature = (function () {
 
     var type = schema.type || 'object';
     var format = schema.format;
-    var model;
+    var name, model;
     var output;
 
     if (!_.isUndefined(schema.example)) {
@@ -501,7 +500,9 @@ SwaggerUi.partials.signature = (function () {
 
     if (_.isUndefined(output)) {
       if (schema.$ref) {
-        model = models[simpleRef(schema.$ref)];
+        name = simpleRef(schema.$ref);
+        name = isListType(name) || name;
+        model = models[name];
 
         if (!_.isUndefined(model)) {
           if (_.isUndefined(modelsToIgnore[model.name])) {

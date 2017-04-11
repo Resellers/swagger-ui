@@ -9,7 +9,7 @@ SwaggerUi.Views.MainView = Backbone.View.extend({
     method  : function(a,b){ return a.method.localeCompare(b.method); }
   },
   initialize: function(opts){
-    var sorterOption, sorterFn, key, value;
+    var sorterOption, sorterFn, key;
     opts = opts || {};
     this.router = opts.router;
 
@@ -42,26 +42,6 @@ SwaggerUi.Views.MainView = Backbone.View.extend({
 
     // set up the UI for input
     this.model.auths = [];
-
-    for (key in this.model.securityDefinitions) {
-      value = this.model.securityDefinitions[key];
-
-      this.model.auths.push({
-        name: key,
-        type: value.type,
-        value: value
-      });
-    }
-
-    if ('validatorUrl' in opts.swaggerOptions) {
-      // Validator URL specified explicitly
-      this.model.validatorUrl = opts.swaggerOptions.validatorUrl;
-    } else if (this.model.url.indexOf('localhost') > 0 || this.model.url.indexOf('127.0.0.1') > 0) {
-      // Localhost override
-      this.model.validatorUrl = null;
-    } else {
-      this.model.validatorUrl = '//online.swagger.io/validator';
-    }
 
     // JSonEditor requires type='object' to be present on defined types, we add it if it's missing
     // is there any valid case were it should not be added ?
