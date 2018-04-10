@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="x-ua-compatible" content="IE=edge">
-  <title>Swagger UI</title>
+    <title>Storefront API Explorer</title>
   <link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32" />
   <link rel="icon" type="image/png" href="images/favicon-16x16.png" sizes="16x16" />
   <link href='css/reset.css' media='screen' rel='stylesheet' type='text/css'/>
@@ -26,28 +26,50 @@
   <script type="text/javascript">
     $(function () {
 
+      $.getJSON('config.json', function(config) {
 
-      window.swaggerUi = new SwaggerUi({
-        basePath: 'https://api.dev-godaddy.com',
-        url: 'specs/v2/petstore.json',
-        dom_id: "swagger-ui-container",
-        headersToHide: ["X-Delegate-Id"],
-        supportHeaderParams: true,
-        supportedSubmitMethods: ['get', 'post', 'put', 'delete', 'patch'],
-        onComplete: function(swaggerApi, swaggerUi){
-
-        },
-        onFailure: function(data) {
-          log("Unable to Load SwaggerUI");
-        },
-        docExpansion: "none",
-        jsonEditor: false,
-        defaultModelRendering: 'schema',
-        showRequestHeaders: false,
-        showOperationIds: false
+        loadSwaggerUi(config);
       });
 
-      window.swaggerUi.load();
+      function loadSwaggerUi(config) {
+        var methodOrder = ['get', 'head', 'options', 'put', 'post', 'delete'];
+        /* eslint-disable camelcase */
+        window.swaggerUi = new SwaggerUi({
+          validatorUrl: null,
+          url: config.url || '/swagger/resources',
+          apiKey: '',
+          dom_id: 'swagger-ui-container',
+          supportHeaderParams: true,
+          onComplete: function(swaggerApi, swaggerUi) {
+            log('Loaded SwaggerUI');
+            log(swaggerApi);
+            log(swaggerUi);
+
+            if (window.SwaggerTranslator) {
+              window.SwaggerTranslator.translate();
+            }
+
+            $('pre code').each(function(i, e) {
+              hljs.highlightBlock(e);
+            });
+          },
+          onFailure: function(data) {
+            log('Unable to Load SwaggerUI');
+            log(data);
+          },
+          docExpansion: 'none',
+          highlightSizeThreshold: 16384,
+          apisSorter: 'alpha',
+          operationsSorter: function(a, b) {
+            var pathCompare = a.path.localeCompare(b.path);
+            return pathCompare !== 0 ?
+              pathCompare :
+              methodOrder.indexOf(a.method) - methodOrder.indexOf(b.method);
+          },
+        });
+
+        window.swaggerUi.load();
+      }
 
       function log() {
         if ('console' in window) {
